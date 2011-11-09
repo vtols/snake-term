@@ -25,10 +25,6 @@ bool action = false, gameover = false, paused = false;
 int snakelim = 15;
 int h, w;
 
-int lastkey = -1;
-
-FILE* keys;
-
 void game();
 int mstime();
 void clear_snake();
@@ -48,20 +44,8 @@ int main() {
 	curs_set(false);
 	nodelay(stdscr, true);
 	keypad(stdscr, true);
-	/*
-	char str[20];
-	while (true) {
-		int c = getch();
-		if (c == -1)
-			continue;
-		sprintf(str, "%d\n", c);
-		move(0, 0);
-		addstr(str);
-		refresh();
-	} */
 	h = LINES - 1;
 	w = COLS;
-	keys = fopen("sout", "w");
 	game();
 	endwin();
 	return 0;
@@ -78,11 +62,9 @@ void game() {
 		if (c != -1) {
 			
 			move(0, 0);
-			fprintf(keys, "%d\n", c);
 			refresh();
 			
 			on_key(c);
-			lastkey = mstime();
 		}
 		if (action && !paused) {
 			int now = mstime();
@@ -128,17 +110,10 @@ void clear_snake() {
 
 void on_key(int code) {
 	if (!action) {
-		//if (mstime() - lastkey < 1000)
-			//return;
 		if (gameover) {
 			endwin();
 			exit(0);
 		}
-		//action = true;
-		//lastnow = mstime();
-		//clear_snake();
-		//gen_food();
-		//sdir = D_RIGHT;
 	} else {
 		if (code == 113) {
 			endwin();
@@ -212,12 +187,8 @@ void smove() {
 	beep();
 	if (snakelen >= snakelim) {
 		action = false;
-		//clear_snake();
-		//gen_food();
 		delay /= 1.2;
 		level++;
-		//show();
-		//message("Wait 1 sec and press any key to start.");
 		restart();
 	}
 }
