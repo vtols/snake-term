@@ -115,25 +115,25 @@ void on_key(int code) {
 			exit(0);
 		}
 	} else {
-		if (code == 113) {
+		if (code == 'Q' || code == 'q') {
 			endwin();
 			exit(0);
 		}
 		if (!paused) {
-			if (code == 112) {
+			if (code == 'P' || code == 'p') {
 				paused = true;
 				message("Pause");
 				return;
 			}
 			int newdir;
 			switch (code) {
-				case 260: newdir = D_LEFT;
+				case KEY_LEFT: newdir = D_LEFT;
 					break;
-				case 261: newdir = D_RIGHT;
+				case KEY_RIGHT: newdir = D_RIGHT;
 					break;
-				case 259: newdir = D_UP;
+				case KEY_UP: newdir = D_UP;
 					break;
-				case 258: newdir = D_DOWN;
+				case KEY_DOWN: newdir = D_DOWN;
 					break;
 				default:
 					return;
@@ -143,7 +143,7 @@ void on_key(int code) {
 			}
 			lastnow = mstime();
 			smove();
-		} else if (code == 112) {
+		} else if (code == 'P' || code == 'p') {
 			paused = false;
 			lastnow = mstime();
 			show();
