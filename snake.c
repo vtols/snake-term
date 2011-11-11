@@ -242,8 +242,12 @@ void show() {
                     addch('X');
                 refresh();
             } 
-    move(h, 0);
     attrset(A_REVERSE);
+    for (i = 0; i < w; i++) {
+        move(h, i);
+        addch(' ');
+    }
+    move(h, 0);
     addstr("Level: ");
     sprintf(t, "%d", level);
     addstr(t);
