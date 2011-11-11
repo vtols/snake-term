@@ -35,6 +35,8 @@ int foodpos, snakelen, sdir = D_RIGHT,
 bool action = false, 
      gameover = false, 
      paused = false;
+     
+char t[80], f[80];
 
 void game();
 int mstime();
@@ -91,8 +93,7 @@ void restart() {
     int waits = 3;
     int i;
     for (i = waits; i >= 0; i--) {
-        char t[50];
-        char f[] = "%d";
+        f = "%d";
         sprintf(t, f, i);
         message(t);
         if (i > 0)
@@ -243,7 +244,6 @@ void show() {
                 refresh();
             } 
     move(h, 0);
-    char t[20];
     attrset(A_REVERSE);
     addstr("Level: ");
     sprintf(t, "%d", level);
