@@ -93,8 +93,7 @@ void restart() {
     int waits = 3;
     int i;
     for (i = waits; i >= 0; i--) {
-        f = "%d";
-        sprintf(t, f, i);
+        sprintf(t, "%d", i);
         message(t);
         if (i > 0)
             wait(1000);
