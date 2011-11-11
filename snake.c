@@ -229,8 +229,10 @@ void show() {
 	sprintf(t, "%d", level);
 	addstr(t);
 	addstr("\tLives: ");
-	for (i = 0; i < lives; i++)
-		addch('+');
+	sprintf(t, "%d", lives);
+	addstr(t);
+	//for (i = 0; i < lives; i++)
+		//addch('+');
 	addstr("\tSnake: ");
 	sprintf(t, "%d/%d", snakelen, snakelim);
 	addstr(t);
