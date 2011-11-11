@@ -181,6 +181,13 @@ void smove() {
         end();
         return;
     }
+    if (newhead != foodpos || foodtype != F_FOOD) {
+        int i;
+        for (i = 0; i < snakelen - 1; i++)
+            snake[i] = snake[i + 1];
+        snake[snakelen - 1] = newhead;
+        smap[newhead] = true;
+    }
     if (newhead == foodpos) {
         switch (foodtype) {
             case F_FOOD:
@@ -196,16 +203,8 @@ void smove() {
                 snakestate = S_NOWALL;
                 break;
         }
-    }
-    if (newhead != foodpos || foodtype != F_FOOD) {
-        int i;
-        for (i = 0; i < snakelen - 1; i++)
-            snake[i] = snake[i + 1];
-        snake[snakelen - 1] = newhead;
-        smap[newhead] = true;
-    }
-    if (newhead == foodpos)
         gen_food();
+    }
     show();
     if (snakelen >= snakelim) {
         action = false;
@@ -271,7 +270,7 @@ void gen_food() {
     srand(mstime());
     while (smap[foodpos] || lmap[foodpos])
         foodpos = rand() % (w * h);
-    int extrafood = (rand() % 2 == 0);
+    int extrafood = (rand() % 31 == 0);
     foodtype = 0;
     if (extrafood)
         foodtype = rand() % 2 + 1;
