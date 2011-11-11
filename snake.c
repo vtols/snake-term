@@ -27,12 +27,14 @@ char foodsymbol[] = ".+*";
 
 int snake[1000];
 bool smap[250000], lmap[250000];
-int foodpos, snakelen, sdir = D_RIGHT;
-int foodtype, snakestate;
-int level = 1, lives = 2, delay = 1000, lastnow;
-bool action = false, gameover = false, paused = false;
-int snakelim = 15;
-int h, w;
+int foodpos, snakelen, sdir = D_RIGHT,
+    foodtype, snakestate,
+    level = 1, lives = 2, 
+    delay = 1000, lastnow,
+    snakelim = 15, h, w;
+bool action = false, 
+     gameover = false, 
+     paused = false;
 
 void game();
 int mstime();
