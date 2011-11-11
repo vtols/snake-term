@@ -10,16 +10,25 @@
 #define D_UP 2
 #define D_DOWN 3
 
+#define F_FOOD 0
+#define F_LIVE 1
+#define F_NOWALL 2
+
+#define S_NORMAL 0
+#define S_NOWALL 1
+
 int dir[4][2] =
 			{{-1, 0}, //left
 			 {1, 0},  //right
 			 {0, -1}, //up
 			 {0, 1}}; //down
+			 
+char foodsymbol[] = ".+*";
 
 int snake[1000];
 bool smap[250000], lmap[250000];
 int foodpos, snakelen, sdir = D_RIGHT;
-bool livefood;
+int foodtype, snakestate;
 int level = 1, lives = 2, delay = 1000, lastnow;
 bool action = false, gameover = false, paused = false;
 int snakelim = 15;
@@ -106,6 +115,7 @@ void clear_snake() {
 		lmap[i] = smap[i] = false;
 	for (i = 0; i < snakelen; i++)
 		smap[i] = true;
+	snakestate = S_NORMAL;
 }
 
 void on_key(int code) {
@@ -158,8 +168,12 @@ void smove() {
 	hy += dir[sdir][1];
 	if (hx < 0 || hx >= w ||
 		hy < 0 || hy >= h) {
-		end();
-		return;
+		if (snakestate != S_NOWALL) {
+		    end();
+		    return;
+		}
+		hx = (hx + w) % w;
+		hy = (hy + h) % h;
 	}
 	int newhead = hy * w + hx;
 	smap[snake[0]] = false;
@@ -167,24 +181,32 @@ void smove() {
 		end();
 		return;
 	}
-	if (newhead == foodpos && !livefood) {
-		snake[snakelen++] = newhead;
-		smap[newhead] = true;
-		gen_food();
-	} else {
-		
-		int i;
-		for (i = 0; i < snakelen - 1; i++)
-			snake[i] = snake[i + 1];
-		snake[snakelen - 1] = newhead;
-		smap[newhead] = true;
-		if (newhead == foodpos && livefood) {
-			lives++;
-			gen_food();
-		}
+	if (newhead == foodpos) {
+	    switch (foodtype) {
+	        case F_FOOD:
+	            snake[snakelen++] = newhead;
+	            smap[newhead] = true;
+	            snakestate = S_NORMAL;
+	            break;
+	        case F_LIVE:
+	            lives++;
+	            snakestate = S_NORMAL;
+	            break;
+			case F_NOWALL:
+	            snakestate = S_NOWALL;
+	            break;
+	    }
 	}
+    if (newhead != foodpos || foodtype != F_FOOD) {
+	    int i;
+	    for (i = 0; i < snakelen - 1; i++)
+		    snake[i] = snake[i + 1];
+	    snake[snakelen - 1] = newhead;
+	    smap[newhead] = true;
+	}
+	if (newhead == foodpos)
+	    gen_food();
 	show();
-	beep();
 	if (snakelen >= snakelim) {
 		action = false;
 		delay /= 1.2;
@@ -206,10 +228,7 @@ void message(const char *s) {
 void show() {
 	clear();
 	move(foodpos / w, foodpos % w);
-	if (livefood)
-		addch('+');
-	else
-		addch('.');
+	addch(foodsymbol[foodtype]);
 	refresh();
 	int k = 0, i, j;
 	for (i = 0; i < h; i++)
@@ -231,8 +250,6 @@ void show() {
 	addstr("\tLives: ");
 	sprintf(t, "%d", lives);
 	addstr(t);
-	//for (i = 0; i < lives; i++)
-		//addch('+');
 	addstr("\tSnake: ");
 	sprintf(t, "%d/%d", snakelen, snakelim);
 	addstr(t);
@@ -254,7 +271,10 @@ void gen_food() {
 	srand(mstime());
 	while (smap[foodpos] || lmap[foodpos])
 		foodpos = rand() % (w * h);
-	livefood = (rand() % 31 == 0);
+	int extrafood = (rand() % 2 == 0);
+	foodtype = 0;
+	if (extrafood)
+	    foodtype = rand() % 2 + 1;
 }
 
 void end() {
