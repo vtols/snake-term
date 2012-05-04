@@ -150,9 +150,10 @@ void on_key(int code) {
                 default:
                     return;
             }
-            if (newdir / 2 != sdir / 2) {
+            if (newdir / 2 != sdir / 2)
                 sdir = newdir;
-            }
+            else
+                return;
             lastnow = mstime();
             smove();
         } else if (code == 'P' || code == 'p') {
