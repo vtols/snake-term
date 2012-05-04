@@ -152,7 +152,7 @@ void on_key(int code) {
             }
             if (newdir / 2 != sdir / 2)
                 sdir = newdir;
-            else
+            else if (newdir != sdir)
                 return;
             lastnow = mstime();
             smove();
