@@ -227,21 +227,21 @@ void message(const char *s) {
 }
 
 void show() {
-    clear();
     move(foodpos / w, foodpos % w);
     addch(foodsymbol[foodtype]);
-    refresh();
     int k = 0, i, j;
     for (i = 0; i < h; i++)
-        for (j = 0; j < w; j++, k++)
+        for (j = 0; j < w; j++, k++) {
+            move(i, j);
             if (smap[k] || lmap[k]) {
-                move(i, j);
                 if (smap[k])
                     addch('O');
                 else
                     addch('X');
                 refresh();
-            } 
+            } else if (k != foodpos)
+                addch(' ');
+        }
     attrset(A_REVERSE);
     for (i = 0; i < w; i++) {
         move(h, i);
