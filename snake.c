@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define D_LEFT 0
 #define D_RIGHT 1
@@ -49,7 +50,6 @@ void gen_food();
 void gen_level();
 void message(const char*);
 void restart();
-void wait(int);
 
 int main() {
     initscr();
@@ -90,13 +90,12 @@ void game() {
 }
 
 void restart() {
-    int waits = 3;
-    int i;
+    int waits = 3, i;
     for (i = waits; i >= 0; i--) {
         sprintf(t, "%d", i);
         message(t);
         if (i > 0)
-            wait(1000);
+            sleep(1);
     }
     clear_snake();
     gen_level();
@@ -291,9 +290,4 @@ void end() {
     message("Game over. Press any key.");
     action = false;
     gameover = true;
-}
-
-void wait(int ms) {
-    int start = mstime();
-    while (mstime() - start < ms);
 }
