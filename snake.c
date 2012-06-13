@@ -59,6 +59,7 @@ int main() {
     keypad(stdscr, true);
     h = LINES - 1;
     w = COLS;
+    srand(time(NULL));
     game();
     endwin();
     return 0;
@@ -272,7 +273,6 @@ void gen_level() {
 }
 
 void gen_food() {
-    srand(mstime());
     while (smap[foodpos] || lmap[foodpos])
         foodpos = rand() % (w * h);
     int extrafood = (rand() % 31 == 0);
